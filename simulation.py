@@ -1,6 +1,7 @@
 import numpy as np
 import time
 import cv2
+import os
 import matplotlib.pyplot as plt
 import argparse
 import sys, signal
@@ -11,9 +12,9 @@ from event_simulator import *
 parser = argparse.ArgumentParser(description="Simulate event data from AirSim")
 parser.add_argument("--debug", action="store_true")
 parser.add_argument("--save", action="store_true")
-parser.add_argument("--height", type=int, default=180)
-parser.add_argument("--width", type=int, default=240)
-parser.add_argument("--video", type=str, default="./dataset/video-regular.mp4")
+parser.add_argument("--height", type=int, default=346)
+parser.add_argument("--width", type=int, default=260)
+parser.add_argument("--folder", type=str, default="./dataset/sample/")
 
 
 class AirSimEventGen:
@@ -55,6 +56,13 @@ class AirSimEventGen:
         self.event_file.close()
         sys.exit(0)
 
+def load_images_from_folder(folder):
+    images = []
+    for filename in os.listdir(folder):
+        images.append(os.path.join(folder,filename))
+    images = sorted(images)
+
+    return images
 
 if __name__ == "__main__":
     args = parser.parse_args()
@@ -66,38 +74,31 @@ if __name__ == "__main__":
 
     signal.signal(signal.SIGINT, event_generator._stop_event_gen)
 
-    cap = cv2.VideoCapture(args.video)
-    assert cap.isOpened() == True
+    images = load_images_from_folder(args.folder)
 
-    while (cap.isOpened()):
-        ret, img = cap.read()
-        if ret == True:
-            ts = time.time_ns()
+    for img in images:
+        img = cv2.imread(img)
 
-            if event_generator.init:
-                event_generator.start_ts = ts
-                event_generator.init = False
+        ts = time.time_ns()
 
-            img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY).astype(np.float32)
-            # Add small number to avoid issues with log(I)
-            img = cv2.add(img, 0.001)
+        if event_generator.init:
+            event_generator.start_ts = ts
+            event_generator.init = False
 
-            ts = time.time_ns()
-            ts_delta = (ts - event_generator.start_ts)
+        # Add small number to avoid issues with log(I)
+        img = cv2.add(img, 0.001)
 
-            # Event sim keeps track of previous image automatically
-            event_img, events = event_generator.ev_sim.image_callback(img, ts_delta)
+        ts = time.time_ns()
+        ts_delta = (ts - event_generator.start_ts)
 
-            if events is not None and events.shape[0] > 0:
-                if event_generator.save:
-                    # Using pickle dump in a per-frame fashion to save time, instead of savetxt
-                    # Optimizations possible
-                    pickle.dump(events, event_generator.event_file)
+        # Event sim keeps track of previous image automatically
+        event_img, events = event_generator.ev_sim.image_callback(img, ts_delta)
 
-                if event_generator.debug:
-                    event_generator.visualize_events(event_img)
+        if events is not None and events.shape[0] > 0:
+            if event_generator.save:
+                # Using pickle dump in a per-frame fashion to save time, instead of savetxt
+                # Optimizations possible
+                pickle.dump(events, event_generator.event_file)
 
-        else:
-            break
-
-    cap.release()
+            if event_generator.debug:
+                event_generator.visualize_events(event_img)
