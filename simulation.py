@@ -12,8 +12,8 @@ from event_simulator import *
 parser = argparse.ArgumentParser(description="Simulate event data from AirSim")
 parser.add_argument("--debug", action="store_true")
 parser.add_argument("--save", action="store_true")
-parser.add_argument("--height", type=int, default=346)
-parser.add_argument("--width", type=int, default=260)
+parser.add_argument("--height", type=int, default=260)
+parser.add_argument("--width", type=int, default=346)
 parser.add_argument("--folder", type=str, default="./dataset/sample/")
 
 
@@ -36,12 +36,13 @@ class AirSimEventGen:
         if debug:
             self.fig, self.ax = plt.subplots(1, 1)
 
-    def visualize_events(self, event_img):
+    def visualize_events(self, event_img, idx):
         event_img = self.convert_event_img_rgb(event_img)
         self.ax.cla()
         self.ax.imshow(event_img, cmap="viridis")
         plt.draw()
-        plt.pause(0.01)
+        plt.imsave(f"./dataset/sample/ev_sample{idx}.png", event_img, cmap="viridis")
+        plt.pause(0.5)
 
     def convert_event_img_rgb(self, image):
         image = image.reshape(self.H, self.W)
@@ -76,8 +77,8 @@ if __name__ == "__main__":
 
     images = load_images_from_folder(args.folder)
 
-    for img in images:
-        img = cv2.imread(img)
+    for imgname in images:
+        img = cv2.imread(imgname)
 
         ts = time.time_ns()
 
@@ -85,6 +86,7 @@ if __name__ == "__main__":
             event_generator.start_ts = ts
             event_generator.init = False
 
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY).astype(np.float32)
         # Add small number to avoid issues with log(I)
         img = cv2.add(img, 0.001)
 
@@ -101,4 +103,5 @@ if __name__ == "__main__":
                 pickle.dump(events, event_generator.event_file)
 
             if event_generator.debug:
-                event_generator.visualize_events(event_img)
+                event_generator.visualize_events(event_img, i)
+        i += 1
