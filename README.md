@@ -16,10 +16,11 @@ There're a few config you can set:
 | ------ | ---- | ----------- |
 | debug  | bool | visualize the simulation |
 | save   | bool | save the event as 'events.pkl' under folder 'result' |
-| video  | str  | the input video |
 | height, width | int | resolution of the images |
+| pathdir | str | path to your raw images |
+| savedir | str | path to save the generated event images |
 
 For example:
 ```bash
-python simulation.py --save --debug --video './my_video' --height 'my_height' --width 'my_width'
+python simulation.py --save --debug --pathdir './path/to/image_sequences/' --savedir './path/to/save/event_images/' --height 'my_height' --width 'my_width'
 ```

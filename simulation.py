@@ -10,12 +10,12 @@ import pickle
 from event_simulator import *
 
 parser = argparse.ArgumentParser(description="Simulate event data from AirSim")
-parser.add_argument("--debug", action="store_true")
-parser.add_argument("--save", action="store_true")
+parser.add_argument("--debug", action="store_true", help="Show the generated event")
+parser.add_argument("--save", action="store_true", help="Save the event information.")
 parser.add_argument("--height", type=int, default=260)
 parser.add_argument("--width", type=int, default=346)
-parser.add_argument("--folder", type=str, default="./dataset/sample/")
-
+parser.add_argument("--pathdir", type=str, default="./dataset/sample/", help="Image dataset path")
+parser.add_argument("--savedir", type=str, default="./dataset/sample/events", help="Event Image path")
 
 class AirSimEventGen:
     def __init__(self, W, H, save=False, debug=False):
@@ -41,7 +41,6 @@ class AirSimEventGen:
         self.ax.cla()
         self.ax.imshow(event_img, cmap="viridis")
         plt.draw()
-        plt.imsave(f"./dataset/sample/ev_sample{idx}.png", event_img, cmap="viridis")
         plt.pause(0.5)
 
     def convert_event_img_rgb(self, image):
@@ -75,7 +74,7 @@ if __name__ == "__main__":
 
     signal.signal(signal.SIGINT, event_generator._stop_event_gen)
 
-    images = load_images_from_folder(args.folder)
+    images = load_images_from_folder(args.pathdir)
 
     for imgname in images:
         img = cv2.imread(imgname)
@@ -104,4 +103,10 @@ if __name__ == "__main__":
 
             if event_generator.debug:
                 event_generator.visualize_events(event_img, i)
+
+            if os.path.isdir(args.savedir) != True:
+                os.makedirs(args.savedir, exist_ok=True)
+            img_saved = event_generator.convert_event_img_rgb(event_img)
+            plt.imsave(os.path.join(args.savedir, f"ev_sample{i}.png"), img_saved, cmap="viridis")
+
         i += 1
