@@ -3,6 +3,8 @@ This project is a simple event simulator, which comes from [Micorsoft/AirSim](ht
 
 + Conda Environment:    **event_simulator**
 
+https://user-images.githubusercontent.com/57358137/180726945-567da13f-e2a8-4714-bae0-f4c8c86bcf6c.mp4
+
 ## Prerequisites
 To run the simulation, you can refer to the environment.yml we provided to build the conda environment (which is what we recommend)
 
