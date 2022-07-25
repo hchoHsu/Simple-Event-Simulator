@@ -1,10 +1,10 @@
 import cv2 as cv
 import numpy as np
-import os
 
 WIDTH, HEIGHT = 346, 260
 
 folder_path = 'sample/'
+event_folder_path = 'sample/events/'
 
 raw_images = ['174_462_474_s_41211687.png',
               '175_462_474_s_41251687.png',
@@ -25,9 +25,9 @@ if __name__ == '__main__':
     for i in range(len(evt_images)):
         frame = np.zeros((HEIGHT, WIDTH*2, 3), np.uint8)
         frame[:HEIGHT, :WIDTH, :3] = cv.imread(folder_path + raw_images[i])
-        frame[:HEIGHT, WIDTH:WIDTH*2, :3] = cv.imread(folder_path + evt_images[i])
+        frame[:HEIGHT, WIDTH:WIDTH*2, :3] = cv.imread(event_folder_path + evt_images[i])
 
         out.write(frame)
         cv.imshow('Left:RawImage, Right:EventImage', frame)
-        if cv.waitKey(100) & 0xFF == ord('q'):
+        if cv.waitKey(1) & 0xFF == ord('q'):
             break

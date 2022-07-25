@@ -5,7 +5,6 @@ import os
 import matplotlib.pyplot as plt
 import argparse
 import sys, signal
-import pandas as pd
 import pickle
 from event_simulator import *
 

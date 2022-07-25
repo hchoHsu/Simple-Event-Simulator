@@ -1,7 +1,22 @@
 # Simple Event Simulator
-This project is a simple event simulator, which comes from [Micorsoft/AirSim](https://github.com/microsoft/AirSim/blob/b272597854f389e03bf7d9b9581666c91f2e24f9/docs/event_sim.md)
+This project is a simple event simulator, which comes from [Micorsoft/AirSim](https://github.com/microsoft/AirSim/blob/b272597854f389e03bf7d9b9581666c91f2e24f9/docs/event_sim.md). It can convert a continuous sequence of images into events.
 
 + Conda Environment:    **event_simulator**
+
+## Prerequisites
+To run the simulation, you can refer to the environment.yml we provided to build the conda environment (which is what we recommend)
+
+```bash
+conda env create -f environment.yml
+```
+
+Or you can also use Python with the following packages installed
+```bash
+numpy
+cv2
+matplotlib
+numba
+```
 
 ## Demo
 You can run the simulation demo using the following command line:
