@@ -40,7 +40,7 @@ class AirSimEventGen:
         self.ax.cla()
         self.ax.imshow(event_img, cmap="viridis")
         plt.draw()
-        plt.pause(0.5)
+        plt.pause(0.1)
 
     def convert_event_img_rgb(self, image):
         image = image.reshape(self.H, self.W)
@@ -65,6 +65,7 @@ def load_images_from_folder(folder):
 
 if __name__ == "__main__":
     args = parser.parse_args()
+    os.makedirs(args.savedir, exist_ok=True)
 
     event_generator = AirSimEventGen(args.width, args.height, save=args.save, debug=args.debug)
     i = 0
@@ -76,7 +77,10 @@ if __name__ == "__main__":
     images = load_images_from_folder(args.pathdir)
 
     for imgname in images:
+        if not imgname.endswith(".jpg") and not imgname.endswith(".png"):
+            continue
         img = cv2.imread(imgname)
+        # img = cv2.resize(cv2.imread(imgname), (160,120), interpolation=cv2.INTER_AREA)
 
         ts = time.time_ns()
 
@@ -106,6 +110,8 @@ if __name__ == "__main__":
             if os.path.isdir(args.savedir) != True:
                 os.makedirs(args.savedir, exist_ok=True)
             img_saved = event_generator.convert_event_img_rgb(event_img)
-            plt.imsave(os.path.join(args.savedir, f"ev_sample{i}.png"), img_saved, cmap="viridis")
+            plt.imsave(os.path.join(args.savedir, f"{i}.png"), img_saved, cmap="viridis")
+        else:
+            plt.imsave(os.path.join(args.savedir, f"{i}.png"), np.zeros(shape=(img.shape[0], img.shape[1], 3)), cmap="viridis")
 
         i += 1
