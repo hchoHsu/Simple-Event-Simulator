@@ -9,6 +9,10 @@ To run the simulation, you can refer to the environment.yml we provided to build
 ```bash
 conda env create -f environment.yml
 ```
+and easily enter the conda environment by
+```bash
+conda activate event_simulator
+```
 
 Or you can also use Python with the following packages installed
 ```bash
@@ -39,3 +43,12 @@ For example:
 ```bash
 python simulation.py --save --debug --pathdir './path/to/image_sequences/' --savedir './path/to/save/event_images/' --height 'my_height' --width 'my_width'
 ```
+
+And also to change the event threshold, you can find the below section at ```event_simulator.py```:
+
+```python=9
+TOL = 0.1
+MINIMUM_CONTRAST_THRESHOLD = 0.01
+```
+
+You can change the value of **TOL** to increase or decrease the event signal sensitivity.
