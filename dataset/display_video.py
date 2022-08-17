@@ -12,7 +12,7 @@ while(cap.isOpened() ): # and cap2.isOpened()
     ret, frame1 = cap.read()
     if ret == True:
         cv2.imshow('Frame()', frame1)
-        if cv2.waitKey(1) & 0xFF == ord('q'):
+        if cv2.waitKey(100) & 0xFF == ord('q'):
             break
     else:
         break

@@ -16,8 +16,8 @@ raw_images = ['174_462_474_s_41211687.png',
               '181_462_474_s_41491685.png',
               '182_462_474_s_41531684.png']
 
-evt_images = ['ev_sample1.png','ev_sample2.png','ev_sample3.png','ev_sample4.png',
-              'ev_sample5.png','ev_sample6.png','ev_sample7.png','ev_sample8.png','ev_sample9.png']
+evt_images = ['1.png','2.png','3.png','4.png',
+              '5.png','6.png','7.png','8.png','9.png']
 
 if __name__ == '__main__':
     out = cv.VideoWriter('sample_demo.mp4', cv.VideoWriter_fourcc(*'mp4v'), 1, (WIDTH*2, HEIGHT))
